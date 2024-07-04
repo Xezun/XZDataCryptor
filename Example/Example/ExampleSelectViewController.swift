@@ -1,5 +1,5 @@
 //
-//  SelectViewController.swift
+//  ExampleSelectViewController.swift
 //  Example
 //
 //  Created by 徐臻 on 2024/6/14.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectViewController: UITableViewController {
+class ExampleSelectViewController: UITableViewController {
     
     public var value: String?
 

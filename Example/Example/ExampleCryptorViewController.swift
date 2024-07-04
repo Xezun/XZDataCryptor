@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ExampleCryptorViewController.swift
 //  Example
 //
 //  Created by 徐臻 on 2024/6/12.
@@ -9,7 +9,7 @@ import UIKit
 import XZDataCryptor
 import XZExtensions
 
-class ViewController: UITableViewController {
+class ExampleCryptorViewController: UITableViewController {
     
     @IBOutlet weak var algorithmDetailLabel: UILabel!
     @IBOutlet weak var keyDetailLabel: UILabel!
@@ -21,48 +21,75 @@ class ViewController: UITableViewController {
     @IBOutlet weak var dataTextField: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
     
+    var operation = XZDataCryptor.Operation.encrypt
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        switch operation {
+        case .encrypt:
+            self.navigationItem.title = "加密"
+        case .decrypt:
+            self.navigationItem.title = "解密"
+        default:
+            break
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.section == 2 , indexPath.row == 0 else {
-            return
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        switch cell.textLabel?.text {
+        case "结果":
+            UIPasteboard.general.string = self.resultLabel.text
+        default:
+            break
         }
-        UIPasteboard.general.string = self.resultLabel.text
     }
 
     @IBAction func unwindToSetAlgorithm(_ unwindSegue: UIStoryboardSegue) {
-        let select = unwindSegue.source as! SelectViewController
+        let select = unwindSegue.source as! ExampleSelectViewController
         self.algorithmDetailLabel.text = select.value
     }
     
     @IBAction func unwindToSetKey(_ unwindSegue: UIStoryboardSegue) {
-        let input = unwindSegue.source as! TextViewController
+        let input = unwindSegue.source as! ExampleTextViewController
         self.keyDetailLabel.text = input.value
     }
     
     @IBAction func unwindToSetVector(_ unwindSegue: UIStoryboardSegue) {
-        let input = unwindSegue.source as! TextViewController
+        let input = unwindSegue.source as! ExampleTextViewController
         self.vectorDetailLabel.text = input.value
     }
     
     @IBAction func unwindToSetRounds(_ unwindSegue: UIStoryboardSegue) {
-        let select = unwindSegue.source as! SelectViewController
+        let select = unwindSegue.source as! ExampleSelectViewController
         roundsDetailLabel.text = select.value
     }
     
     @IBAction func unwindToSetMode(_ unwindSegue: UIStoryboardSegue) {
-        let select = unwindSegue.source as! SelectViewController
+        let select = unwindSegue.source as! ExampleSelectViewController
         modeDetailLabel.text = select.value
     }
     
     @IBAction func unwindToSetPadding(_ unwindSegue: UIStoryboardSegue) {
-        let select = unwindSegue.source as! SelectViewController
+        let select = unwindSegue.source as! ExampleSelectViewController
         paddingDetailLabel.text = select.value
     }
 
-    @IBAction func encryptButtonAction(_ sender: UIButton) {
+    @IBAction func confirmButtonAction(_ sender: UIBarButtonItem) {
+        sender.isEnabled = false
+        switch operation {
+        case .decrypt:
+            self.decryptButtonAction()
+        case .encrypt:
+            self.encryptButtonAction()
+        default:
+            break
+        }
+        sender.isEnabled = true
+    }
+    
+    private func encryptButtonAction() {
         guard let data = self.dataTextField.text else { return }
         guard let data = data.data(using: .utf8) else { return }
         
@@ -85,7 +112,7 @@ class ViewController: UITableViewController {
         }
     }
     
-    @IBAction func decryptButtonAction(_ sender: UIButton) {
+    private func decryptButtonAction() {
         guard let string = self.dataTextField.text else { return }
         let data = NSData.init(hexEncodedString: string)
         
@@ -168,22 +195,22 @@ class ViewController: UITableViewController {
         
         switch identifier {
         case "algorithm":
-            let nextVC = segue.destination as! SelectViewController
+            let nextVC = segue.destination as! ExampleSelectViewController
             nextVC.value = algorithmDetailLabel.text
         case "key":
-            let nextVC = segue.destination as! TextViewController
+            let nextVC = segue.destination as! ExampleTextViewController
             nextVC.value = keyDetailLabel.text
         case "vector":
-            let nextVC = segue.destination as! TextViewController
+            let nextVC = segue.destination as! ExampleTextViewController
             nextVC.value = vectorDetailLabel.text
         case "rounds":
-            let nextVC = segue.destination as! SelectViewController
+            let nextVC = segue.destination as! ExampleSelectViewController
             nextVC.value = roundsDetailLabel.text
         case "mode":
-            let nextVC = segue.destination as! SelectViewController
+            let nextVC = segue.destination as! ExampleSelectViewController
             nextVC.value = modeDetailLabel.text
         case "padding":
-            let nextVC = segue.destination as! SelectViewController
+            let nextVC = segue.destination as! ExampleSelectViewController
             nextVC.value = paddingDetailLabel.text
         default:
             break

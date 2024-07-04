@@ -1,5 +1,5 @@
 //
-//  TextViewController.swift
+//  ExampleTextViewController.swift
 //  Example
 //
 //  Created by 徐臻 on 2024/6/14.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TextViewController: UIViewController {
+class ExampleTextViewController: UIViewController {
     
     var value: String?
 
